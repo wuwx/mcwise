@@ -1,0 +1,13 @@
+version: 2
+updates:
+  # 保持 GitHub Actions 版本不过期（可避免已废弃的 action 版本带来的安全隐患）
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "ci"
+    labels:
+      - "dependencies"
+      - "ci"

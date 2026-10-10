@@ -1,0 +1,26 @@
+# Ruff 静态检查配置
+# 文档：https://docs.astral.sh/ruff/configuration/
+
+line-length = 120
+target-version = "py39"
+
+extend-exclude = [".git", "__pycache__", ".venv", "venv"]
+
+[lint]
+# E/W = pycodestyle，F = pyflakes，I = isort，B = flake8-bugbear，UP = pyupgrade，RUF = ruff 专属规则
+select = ["E", "W", "F", "I", "B", "UP", "RUF"]
+
+ignore = [
+  # 行长交由 ruff format 与代码评审处理：营养别名表等数据字面量保持单行更易读
+  "E501",
+  # RUF001/002/003 用于拦截"同形异义字符"攻击，但本项目为中文代码库，
+  # 全角标点（：，（））是正常的书写方式，启用会产生大量误报。
+  "RUF001",
+  "RUF002",
+  "RUF003",
+]
+
+[lint.per-file-ignores]
+# cli.py 与测试需要在调整 sys.path 之后再导入本地模块
+"scripts/cli.py" = ["E402"]
+"tests/*" = ["E402"]

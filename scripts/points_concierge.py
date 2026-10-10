@@ -17,13 +17,14 @@
 
 from __future__ import annotations
 
-from typing import Any, Mapping, Sequence
+from collections.abc import Mapping, Sequence
+from typing import Any
 
 from mcd_core import MallProduct
 
 __all__ = ["optimize_points", "render_points"]
 
-DEFAULT_UNIT = 10          # 背包精度：每 10 积分作为一个格子
+DEFAULT_UNIT = 10  # 背包精度：每 10 积分作为一个格子
 MAX_CAPACITY_CELLS = 200_000
 
 
@@ -31,11 +32,7 @@ def _account_balance(payload: Mapping[str, Any]) -> tuple[float, Mapping[str, An
     raw = payload.get("balance")
     if isinstance(raw, Mapping):
         return float(
-            raw.get("available_points")
-            or raw.get("available")
-            or raw.get("points")
-            or raw.get("balance")
-            or 0.0
+            raw.get("available_points") or raw.get("available") or raw.get("points") or raw.get("balance") or 0.0
         ), raw
     return float(payload.get("available_points") or 0.0), {}
 

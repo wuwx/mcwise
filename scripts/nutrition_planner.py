@@ -19,8 +19,9 @@
 
 from __future__ import annotations
 
+from collections.abc import Mapping, Sequence
 from itertools import combinations, product
-from typing import Any, Iterable, Mapping, Sequence
+from typing import Any
 
 from mcd_core import MenuItem, Nutrition
 
@@ -35,8 +36,8 @@ NUTRIENT_LABELS = {
     "calcium_mg": ("钙", "mg"),
 }
 
-MAX_GROUP_SIZE = 40      # 每个分类参与枚举的候选上限，防止组合爆炸
-MAX_COMBOS = 500_000     # 总枚举上限保护
+MAX_GROUP_SIZE = 40  # 每个分类参与枚举的候选上限，防止组合爆炸
+MAX_COMBOS = 500_000  # 总枚举上限保护
 
 
 def _weighted_deviation(
@@ -177,15 +178,10 @@ def plan_meals(payload: Mapping[str, Any], top_n: int = 3) -> dict[str, Any]:
 
 def render_plan(plan: Mapping[str, Any]) -> str:
     """把单套方案渲染为人类可读文本。"""
-    lines = [
-        f"¥{plan.get('total_price', 0):.2f}  ·  "
-        + " + ".join(i.get("name", "") for i in plan.get("items", []))
-    ]
+    lines = [f"¥{plan.get('total_price', 0):.2f}  ·  " + " + ".join(i.get("name", "") for i in plan.get("items", []))]
     total = plan.get("total_nutrition", {})
     facts = " | ".join(
-        f"{NUTRIENT_LABELS[k][0]} {total.get(k, 0):.0f}{NUTRIENT_LABELS[k][1]}"
-        for k in NUTRIENT_LABELS
-        if total.get(k)
+        f"{NUTRIENT_LABELS[k][0]} {total.get(k, 0):.0f}{NUTRIENT_LABELS[k][1]}" for k in NUTRIENT_LABELS if total.get(k)
     )
     lines.append(f"  营养：{facts}")
     dev = plan.get("deviation_pct") or {}

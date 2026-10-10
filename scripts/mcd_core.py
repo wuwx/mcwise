@@ -12,16 +12,17 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import asdict, dataclass, field
-from typing import Any, Iterable, Mapping, Optional, Sequence
+from typing import Any, ClassVar
 
 __all__ = [
-    "Nutrition",
-    "MenuItem",
-    "Coupon",
-    "MallProduct",
     "Campaign",
     "CartLine",
+    "Coupon",
+    "MallProduct",
+    "MenuItem",
+    "Nutrition",
     "to_dict",
 ]
 
@@ -49,7 +50,7 @@ def _first(source: Mapping[str, Any], *keys: str, default: Any = None) -> Any:
     return default
 
 
-def _nutri_from_any(raw: Any) -> "Nutrition":
+def _nutri_from_any(raw: Any) -> Nutrition:
     """兼容 dict / list 两种营养信息结构。"""
     if isinstance(raw, Mapping):
         return Nutrition.from_dict(raw)
@@ -80,8 +81,18 @@ class Nutrition:
     calcium_mg: float = 0.0
 
     # 常见中文别名 -> 内部字段
-    _ALIASES = {
-        "energy_kcal": ("energy_kcal", "energy", "energyKcal", "calorie", "calories", "热量", "能量", "能量(kcal)", "能量(Kcal)"),
+    _ALIASES: ClassVar[dict[str, tuple[str, ...]]] = {
+        "energy_kcal": (
+            "energy_kcal",
+            "energy",
+            "energyKcal",
+            "calorie",
+            "calories",
+            "热量",
+            "能量",
+            "能量(kcal)",
+            "能量(Kcal)",
+        ),
         "protein_g": ("protein_g", "protein", "蛋白质", "蛋白质(g)"),
         "fat_g": ("fat_g", "fat", "脂肪", "脂肪(g)"),
         "carb_g": ("carb_g", "carbohydrate", "carb", "carbs", "碳水化合物", "碳水化合物(g)"),
@@ -90,7 +101,7 @@ class Nutrition:
     }
 
     @classmethod
-    def from_dict(cls, raw: Any) -> "Nutrition":
+    def from_dict(cls, raw: Any) -> Nutrition:
         if not isinstance(raw, Mapping):
             return cls()
         kw: dict[str, float] = {}
@@ -117,7 +128,7 @@ class MenuItem:
     tags: list[str] = field(default_factory=list)
 
     @classmethod
-    def from_dict(cls, raw: Mapping[str, Any]) -> "MenuItem":
+    def from_dict(cls, raw: Mapping[str, Any]) -> MenuItem:
         nutri_raw = _first(raw, "nutrition", "nutritionFacts", "nutrition_info", "营养成分")
         if nutri_raw is None:
             nutri_raw = raw  # 营养 Tool 常常把营养字段平铺在根节点
@@ -160,7 +171,7 @@ class Coupon:
     exclusive_group: str = "default"
 
     @classmethod
-    def from_dict(cls, raw: Mapping[str, Any]) -> "Coupon":
+    def from_dict(cls, raw: Mapping[str, Any]) -> Coupon:
         kind = str(_first(raw, "kind", "type", "couponType", default="threshold")).lower()
         if kind in ("满减", "manjian", "full_reduction"):
             kind = "threshold"
@@ -215,7 +226,7 @@ class MallProduct:
     market_value: float = 0.0
 
     @classmethod
-    def from_dict(cls, raw: Mapping[str, Any]) -> "MallProduct":
+    def from_dict(cls, raw: Mapping[str, Any]) -> MallProduct:
         points = _num(_first(raw, "points_cost", "pointsCost", "points", "needPoints", "integral"), 0.0)
         cash = _num(_first(raw, "cash_price", "cashPrice", "price", "amount"), 0.0)
         market = _num(_first(raw, "market_value", "marketValue", "value", "worth", "faceValue"), 0.0)
@@ -255,7 +266,7 @@ class Campaign:
     description: str = ""
 
     @classmethod
-    def from_dict(cls, raw: Mapping[str, Any]) -> "Campaign":
+    def from_dict(cls, raw: Mapping[str, Any]) -> Campaign:
         tags = _first(raw, "tags", "keywords", "labels", default=[]) or []
         if isinstance(tags, (str, bytes)):
             tags = [tags]
@@ -283,7 +294,7 @@ class CartLine:
     qty: int = 1
 
     @classmethod
-    def from_dict(cls, raw: Mapping[str, Any]) -> "CartLine":
+    def from_dict(cls, raw: Mapping[str, Any]) -> CartLine:
         return cls(
             code=str(_first(raw, "code", "productCode", "id", default="")),
             name=str(_first(raw, "name", "productName", default="商品")),

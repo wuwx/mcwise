@@ -18,16 +18,16 @@ SCRIPTS = os.path.join(ROOT, "scripts")
 EXAMPLES = os.path.join(ROOT, "examples")
 sys.path.insert(0, SCRIPTS)
 
-from campaign_radar import rank_campaigns  # noqa: E402
-from deal_strategist import optimize_deals  # noqa: E402
-from mcd_core import Coupon, MallProduct, Nutrition  # noqa: E402
-from nutrition_planner import plan_meals  # noqa: E402
-from points_concierge import optimize_points  # noqa: E402
-from workflow import TOOL_CHAINS, list_intents, tool_chain  # noqa: E402
+from campaign_radar import rank_campaigns
+from deal_strategist import optimize_deals
+from mcd_core import Coupon, MallProduct, Nutrition
+from nutrition_planner import plan_meals
+from points_concierge import optimize_points
+from workflow import TOOL_CHAINS, list_intents, tool_chain
 
 
 def load(name: str) -> dict:
-    with open(os.path.join(EXAMPLES, name), "r", encoding="utf-8") as fh:
+    with open(os.path.join(EXAMPLES, name), encoding="utf-8") as fh:
         return json.load(fh)
 
 

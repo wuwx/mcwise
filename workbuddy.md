@@ -115,17 +115,45 @@ $ python scripts/cli.py points --input examples/points_input.json
 | 调试 | 定位并修复 2 个真实缺陷，测试全绿 |
 | 验证 | 端到端运行 CLI，生成示例输出快照 |
 | 文档 | 编写 README / MCP_INTEGRATION / SKILL 三份核心文档 |
+| 工程化 | 编写合规自检脚本、三套 GitHub Actions 工作流、Dependabot 配置 |
+| 仓库 | `git init`、`.gitattributes` 换行符策略、提交前敏感信息扫描 |
+
+---
+
+## 3.1 工程化阶段（第二轮迭代）
+
+在项目上线 GitHub 之后，继续完善了工程质量保障：
+
+1. **参赛合规自检脚本** `scripts/check_compliance.py`
+   —— 把「必需文件齐全 / 声明原文一致 / JSON 合法 / 配置脱敏 / 无硬编码凭据」
+   五类校验固化为可执行脚本，本地与 CI 共用同一套逻辑，避免两处规则漂移。
+
+2. **三套 GitHub Actions 工作流**
+   - `ci.yml`：`ubuntu` / `windows` / `macos` × Python `3.9` / `3.13` 矩阵跑全部单元测试，
+     外加 CLI 端到端冒烟与 JSON 输出结构校验；
+   - `lint.yml`：`ruff check` + `ruff format --check`；
+   - `compliance.yml`：合规自检，并**实时拉取官方原文比对 sha256**。
+
+3. **反向测试** `tests/test_compliance.py`
+   —— 用 11 个用例证明自检脚本**确实能抓到违规**（缺失文件、声明被改动、
+   CRLF 污染、真实 Token、`.env` 入库、BOM、私钥泄漏），而不是永远返回通过。
+
+4. **自检脚本对自己的测试夹具产生了一次误报**（夹具里含"假 Token"和"假私钥"字符串），
+   修复方式是让夹具在**运行时拼接**而非写成字面量 —— 保持扫描规则零豁免，
+   而不是给检查器开后门加白名单。
 
 ---
 
 ## 4. 可复现性说明
 
 本项目的全部产物（代码、测试、文档、示例）均可通过仓库内容独立复现，
-不依赖任何会话内的临时状态。测试运行方式：
+不依赖任何会话内的临时状态。验证方式：
 
 ```bash
-python -m unittest discover -s tests -v
-# Ran 22 tests ... OK
+python scripts/check_compliance.py        # 参赛合规自检 → 全部通过（共 19 项检查）
+python -m unittest discover -s tests -v   # Ran 33 tests ... OK
+ruff check scripts tests                  # All checks passed!
+ruff format --check scripts tests         # 已格式化
 ```
 
 ---

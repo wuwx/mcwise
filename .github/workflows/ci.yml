@@ -1,0 +1,68 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+# 最小权限原则：CI 只需读取代码
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: 单元测试 · ${{ matrix.os }} · Py${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ["3.9", "3.13"]
+        exclude:
+          # macos 跑一份即可，控制 CI 时长
+          - os: macos-latest
+            python-version: "3.9"
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 配置 Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: 环境信息
+        run: |
+          python --version
+          python -c "import sys; print('platform:', sys.platform)"
+
+      - name: 运行单元测试
+        run: python -m unittest discover -s tests -v
+
+      - name: CLI 端到端冒烟测试
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "— 四个求解器 —"
+          for cmd in nutrition deals points campaigns; do
+            python scripts/cli.py "$cmd" --input "examples/${cmd}_input.json" > /dev/null
+            echo "  ✓ $cmd"
+          done
+          echo "— 意图与调用链 —"
+          python scripts/cli.py intents > /dev/null && echo "  ✓ intents"
+          python scripts/cli.py chain nutrition_plan > /dev/null && echo "  ✓ chain"
+          python scripts/cli.py chain one_tap_order > /dev/null && echo "  ✓ chain one_tap_order"
+
+      - name: 验证 JSON 输出可被机器消费
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/cli.py points --input examples/points_input.json --json \
+            | python -c "import json,sys; d=json.load(sys.stdin); assert d['plan']['used_points'] > 0; print('  ✓ JSON 输出结构正确')"

@@ -2,10 +2,13 @@
 
 > 让每一次「我想吃麦当劳」都变成一次有据可依的最优决策。
 
+[![CI](https://github.com/wuwx/mcwise/actions/workflows/ci.yml/badge.svg)](https://github.com/wuwx/mcwise/actions/workflows/ci.yml)
+[![Lint](https://github.com/wuwx/mcwise/actions/workflows/lint.yml/badge.svg)](https://github.com/wuwx/mcwise/actions/workflows/lint.yml)
+[![参赛合规检查](https://github.com/wuwx/mcwise/actions/workflows/compliance.yml/badge.svg)](https://github.com/wuwx/mcwise/actions/workflows/compliance.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.9%2B-blue.svg)](https://www.python.org/)
 [![MCP](https://img.shields.io/badge/MCP-Streamable%20HTTP-orange.svg)](https://open.mcd.cn/mcp)
-[![Tests](https://img.shields.io/badge/tests-22%20passed-brightgreen.svg)](./tests)
+[![Tests](https://img.shields.io/badge/tests-33%20passed-brightgreen.svg)](./tests)
 
 **麦麦智囊（McWise）** 是一个基于**麦当劳中国 MCP Server** 构建的智能决策 Skill。
 它不做「再包一层聊天框」这种事，而是把麦当劳点餐场景中真正需要算的部分——
@@ -136,10 +139,9 @@ cd mcwise
 ### 4.3 验证安装
 
 ```bash
-python -m unittest discover -s tests -v
+python -m unittest discover -s tests -v     # 单元测试，预期 Ran 33 tests ... OK
+python scripts/check_compliance.py          # 参赛合规自检，预期 全部通过（共 19 项检查）
 ```
-
-预期输出：`Ran 22 tests ... OK`
 
 ---
 
@@ -237,6 +239,13 @@ mcwise/
 ├── workbuddy.md                  # WorkBuddy 开发对话上下文
 ├── SKILL.md                      # 给 WorkBuddy 加载的 Skill 定义
 ├── LICENSE                       # MIT
+├── ruff.toml                     # 静态检查配置
+├── .github/
+│   ├── workflows/
+│   │   ├── ci.yml                # 单元测试（Linux/Windows/macOS × Py3.9/3.13）+ CLI 冒烟
+│   │   ├── lint.yml              # Ruff 静态检查与格式校验
+│   │   └── compliance.yml        # 参赛合规自检 + 与官方声明原文比对
+│   └── dependabot.yml            # GitHub Actions 版本自动更新
 ├── scripts/
 │   ├── mcd_core.py               # 数据模型 + MCP 返回值归一化
 │   ├── nutrition_planner.py      # 营养配餐求解器
@@ -244,9 +253,11 @@ mcwise/
 │   ├── points_concierge.py       # 积分价值 + 0/1 背包
 │   ├── campaign_radar.py         # 活动匹配排序
 │   ├── workflow.py               # 意图 → MCP Tool 调用链
+│   ├── check_compliance.py       # 参赛合规自检脚本
 │   └── cli.py                    # 命令行入口
 ├── tests/
-│   └── test_mcwise.py            # 22 个单元测试
+│   ├── test_mcwise.py            # 四大求解器的 22 个单元测试
+│   └── test_compliance.py        # 合规自检的 11 个单元测试（含反向用例）
 ├── examples/                     # 输入样例与真实输出快照
 ├── assets/
 │   └── demo.html                 # 单文件方案演示页（浏览器直接打开）
@@ -255,7 +266,30 @@ mcwise/
 
 ---
 
-## 7. 赛事相关文件说明
+## 7. 持续集成
+
+仓库配置了三套 GitHub Actions 工作流，每次推送与 PR 都会自动执行：
+
+| 工作流 | 触发 | 作用 |
+| --- | --- | --- |
+| **CI** | push / PR | 在 `ubuntu` / `windows` / `macos` × Python `3.9` / `3.13` 矩阵上跑全部单元测试，并做 CLI 端到端冒烟与 JSON 输出结构校验 |
+| **Lint** | push / PR | `ruff check`（E/W/F/I/B/UP/RUF 规则集）+ `ruff format --check` |
+| **参赛合规检查** | push / PR / 每日定时 | 校验必需文件齐全、`CONTEST_DECLARATION.md` 与官方原文逐字节一致、JSON 合法、配置已脱敏、无硬编码凭据 |
+
+本地可随时复现同样的结论：
+
+```bash
+python scripts/check_compliance.py        # 参赛合规自检
+python -m unittest discover -s tests -v   # 全部 33 个测试
+ruff check scripts tests && ruff format --check scripts tests
+```
+
+> 「参赛合规检查」还包含一个 `declaration-upstream` 作业：每次运行都会**实时拉取官方仓库的原文**
+> 重新比对 sha256。这样即使官方规则文件发生变更，也能第一时间发现，避免因声明不一致而失去参赛资格。
+
+---
+
+## 8. 赛事相关文件说明
 
 按[麦当劳程序员创意开发大赛活动规则](https://github.com/M-China/mcd-developer-innovation-challenge)要求：
 
@@ -270,7 +304,7 @@ mcwise/
 
 ---
 
-## 8. 免责声明
+## 9. 免责声明
 
 - 本项目为**麦当劳程序员节创意开发大赛参赛作品**，由参赛者独立开发，**非麦当劳官方产品**。
 - 项目输出仅供参考，**不构成医疗、营养或其他专业建议**；餐品信息、价格及供应状态**以麦当劳官方渠道的实时结果为准**。
@@ -279,6 +313,6 @@ mcwise/
 
 ---
 
-## 9. License
+## 10. License
 
 [MIT](./LICENSE) © 2026 McWise Contributors

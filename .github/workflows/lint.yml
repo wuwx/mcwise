@@ -1,0 +1,50 @@
+name: Lint
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lint-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ruff:
+    name: Ruff 静态检查与格式校验
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 配置 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: 安装 ruff
+        run: pip install --disable-pip-version-check "ruff==0.17.0"
+
+      - name: 静态检查
+        run: ruff check --output-format=github scripts tests
+
+      - name: 格式校验
+        run: ruff format --check scripts tests
+
+      - name: 汇总
+        if: always()
+        run: |
+          {
+            echo "### Ruff 静态检查"
+            echo ""
+            echo "| 检查项 | 结果 |"
+            echo "| --- | --- |"
+            echo "| \`ruff check\` 规则集 | E / W / F / I / B / UP / RUF |"
+            echo "| \`ruff format --check\` | 已校验 |"
+            echo "| 配置文件 | \`ruff.toml\` |"
+          } >> "$GITHUB_STEP_SUMMARY"

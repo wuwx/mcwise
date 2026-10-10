@@ -14,16 +14,17 @@
 
 from __future__ import annotations
 
+from collections.abc import Mapping, Sequence
 from datetime import date, datetime
-from typing import Any, Mapping, Sequence
+from typing import Any
 
 from mcd_core import Campaign
 
 __all__ = ["rank_campaigns", "render_campaigns"]
 
 STATUS_WEIGHT = {"ongoing": 2.0, "upcoming": 1.6, "past": 0.8, "ended": 0.4}
-INTEREST_WEIGHT = 1.5    # 每个命中兴趣的加权
-CITY_MATCH_BONUS = 1.5   # 城市命中加权
+INTEREST_WEIGHT = 1.5  # 每个命中兴趣的加权
+CITY_MATCH_BONUS = 1.5  # 城市命中加权
 CITY_MISS_PENALTY = 0.8  # 城市不匹配扣分
 
 

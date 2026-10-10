@@ -1,0 +1,89 @@
+name: 参赛合规检查
+
+# 本工作流校验仓库是否持续满足「麦当劳程序员创意开发大赛」的硬性要求。
+# 即使未来有人修改了仓库内容，也能第一时间发现合规性问题。
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    # 每日 01:00 UTC（北京时间 09:00）复查一次，防止官方规则变更未被察觉
+    - cron: "0 1 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: compliance-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  compliance:
+    name: 仓库合规自检
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 配置 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: 运行合规自检
+        run: python scripts/check_compliance.py
+
+      - name: 输出参赛文件清单
+        if: always()
+        run: |
+          echo "### 参赛文件清单" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "| 文件 | 状态 |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| --- | --- |" >> "$GITHUB_STEP_SUMMARY"
+          for f in README.md CONTEST_DECLARATION.md MCP_INTEGRATION.md mcp-config.example.json workbuddy.md; do
+            if [ -f "$f" ]; then
+              echo "| \`$f\` | ✅ 已提交 |" >> "$GITHUB_STEP_SUMMARY"
+            else
+              echo "| \`$f\` | ❌ 缺失 |" >> "$GITHUB_STEP_SUMMARY"
+            fi
+          done
+
+  declaration-upstream:
+    name: 参赛声明与官方原文比对
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 下载官方原文并比对 sha256
+        run: |
+          set -euo pipefail
+          curl -fsSL --retry 3 --max-time 30 \
+            "https://raw.githubusercontent.com/M-China/mcd-developer-innovation-challenge/main/CONTEST_DECLARATION.md" \
+            -o /tmp/official_declaration.md
+
+          local_sha=$(sha256sum CONTEST_DECLARATION.md | cut -d' ' -f1)
+          official_sha=$(sha256sum /tmp/official_declaration.md | cut -d' ' -f1)
+
+          echo "本地 sha256 : $local_sha"
+          echo "官方 sha256 : $official_sha"
+
+          if [ "$local_sha" != "$official_sha" ]; then
+            echo "::error::CONTEST_DECLARATION.md 与官方原文不一致！大赛要求该文件内容不可改动。"
+            exit 1
+          fi
+          echo "::notice::参赛声明与官方原文逐字节一致 ✓"
+
+          {
+            echo "### 参赛声明一致性"
+            echo ""
+            echo "| 来源 | sha256 |"
+            echo "| --- | --- |"
+            echo "| 本仓库 | \`${local_sha:0:16}…\` |"
+            echo "| 官方原文 | \`${official_sha:0:16}…\` |"
+            echo ""
+            echo "✅ 逐字节一致，符合大赛「内容不可改动」要求。"
+          } >> "$GITHUB_STEP_SUMMARY"

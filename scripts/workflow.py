@@ -13,7 +13,7 @@ from __future__ import annotations
 
 from typing import Any
 
-__all__ = ["TOOL_CHAINS", "tool_chain", "list_intents"]
+__all__ = ["TOOL_CHAINS", "list_intents", "tool_chain"]
 
 TOOL_CHAINS: dict[str, dict[str, Any]] = {
     "nutrition_plan": {

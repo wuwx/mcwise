@@ -20,14 +20,15 @@
 
 from __future__ import annotations
 
+from collections.abc import Mapping, Sequence
 from itertools import combinations
-from typing import Any, Mapping, Sequence
+from typing import Any
 
 from mcd_core import CartLine, Coupon
 
 __all__ = ["optimize_deals", "render_deal"]
 
-MAX_COUPON_SUBSET = 8   # 参与枚举的最大券数，避免 2^n 爆炸
+MAX_COUPON_SUBSET = 8  # 参与枚举的最大券数，避免 2^n 爆炸
 
 
 def _subtotal(lines: Sequence[CartLine]) -> float:
@@ -176,7 +177,9 @@ def _explain(best: Sequence[Coupon], saving: float, subtotal: float, delivery_fe
 
 def render_deal(result: Mapping[str, Any]) -> str:
     best = result.get("best") or {}
-    lines = [f"小计 ¥{result.get('subtotal', 0):.2f} → 实付 ¥{best.get('payable', 0):.2f}（省 ¥{best.get('saving', 0):.2f}）"]
+    lines = [
+        f"小计 ¥{result.get('subtotal', 0):.2f} → 实付 ¥{best.get('payable', 0):.2f}（省 ¥{best.get('saving', 0):.2f}）"
+    ]
     if best.get("explain"):
         lines.append("  " + str(best["explain"]))
     for u in result.get("upsell_suggestions", []):

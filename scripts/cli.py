@@ -21,18 +21,18 @@ from typing import Any
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from campaign_radar import rank_campaigns, render_campaigns  # noqa: E402
-from deal_strategist import optimize_deals, render_deal  # noqa: E402
-from nutrition_planner import plan_meals, render_plan  # noqa: E402
-from points_concierge import optimize_points, render_points  # noqa: E402
-from workflow import list_intents, tool_chain  # noqa: E402
+from campaign_radar import rank_campaigns, render_campaigns
+from deal_strategist import optimize_deals, render_deal
+from nutrition_planner import plan_meals, render_plan
+from points_concierge import optimize_points, render_points
+from workflow import list_intents, tool_chain
 
 
 def _load_payload(args: argparse.Namespace) -> dict[str, Any]:
     if getattr(args, "stdin", False):
         return json.load(sys.stdin)
     if getattr(args, "input", None):
-        with open(args.input, "r", encoding="utf-8") as fh:
+        with open(args.input, encoding="utf-8") as fh:
             return json.load(fh)
     raise SystemExit("请通过 --input <file> 或 --stdin 提供 JSON 输入")
 
