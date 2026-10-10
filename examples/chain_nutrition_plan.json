@@ -1,0 +1,38 @@
+{
+  "name": "营养配餐",
+  "description": "按热量/蛋白质/脂肪/钠目标，从门店可售餐品中求解最优组合。",
+  "steps": [
+    {
+      "tool": "now-time-info",
+      "purpose": "锚定当前时间，判断早餐/正餐菜单"
+    },
+    {
+      "tool": "query-nearby-stores",
+      "purpose": "定位用户附近可下单门店"
+    },
+    {
+      "tool": "query-store-coupons",
+      "purpose": "获取该门店券，供省钱参谋联动"
+    },
+    {
+      "tool": "query-meals",
+      "purpose": "拉取门店可售餐品与分类"
+    },
+    {
+      "tool": "query-meal-detail",
+      "purpose": "获取套餐组成与可替换项"
+    },
+    {
+      "tool": "list-nutrition-foods",
+      "purpose": "获取餐品营养成分"
+    },
+    {
+      "tool": "local:nutrition_planner.plan_meals",
+      "purpose": "多目标优化求解最优组合"
+    },
+    {
+      "tool": "calculate-price",
+      "purpose": "用官方口径复核方案价格"
+    }
+  ]
+}

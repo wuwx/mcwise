@@ -1,0 +1,41 @@
+{
+  "_comment": "McWise 营养配餐输入示例。营养数值为公开渠道整理的教学示例，正式使用请以 list-nutrition-foods 实时返回为准。",
+  "target": {
+    "energy_kcal": 540,
+    "protein_g": 28,
+    "fat_g": 18,
+    "carb_g": 63,
+    "sodium_mg": 900
+  },
+  "weights": {
+    "energy_kcal": 1.2,
+    "protein_g": 1.0,
+    "fat_g": 1.0,
+    "carb_g": 0.6,
+    "sodium_mg": 0.4
+  },
+  "constraints": {
+    "energy_kcal": { "min": 440, "max": 680 },
+    "sodium_mg": { "max": 1300 }
+  },
+  "structure": { "main": 1, "side": 1, "drink": 1 },
+  "candidates": [
+    { "code": "M001", "name": "巨无霸", "category": "main", "price": 25.5, "nutrition": { "energy_kcal": 550, "protein_g": 26, "fat_g": 30, "carb_g": 45, "sodium_mg": 1000, "calcium_mg": 120 } },
+    { "code": "M002", "name": "板烧鸡腿堡", "category": "main", "price": 23.5, "nutrition": { "energy_kcal": 440, "protein_g": 25, "fat_g": 17, "carb_g": 44, "sodium_mg": 900, "calcium_mg": 90 } },
+    { "code": "M003", "name": "麦辣鸡腿堡", "category": "main", "price": 21.5, "nutrition": { "energy_kcal": 470, "protein_g": 22, "fat_g": 22, "carb_g": 47, "sodium_mg": 950, "calcium_mg": 80 } },
+    { "code": "M004", "name": "双层吉士汉堡", "category": "main", "price": 20.5, "nutrition": { "energy_kcal": 440, "protein_g": 25, "fat_g": 23, "carb_g": 34, "sodium_mg": 1100, "calcium_mg": 160 } },
+    { "code": "M005", "name": "麦香鸡", "category": "main", "price": 17.5, "nutrition": { "energy_kcal": 380, "protein_g": 16, "fat_g": 17, "carb_g": 40, "sodium_mg": 800, "calcium_mg": 60 } },
+    { "code": "M006", "name": "麦香鱼", "category": "main", "price": 16.5, "nutrition": { "energy_kcal": 330, "protein_g": 15, "fat_g": 14, "carb_g": 37, "sodium_mg": 600, "calcium_mg": 70 } },
+    { "code": "S001", "name": "中薯条", "category": "side", "price": 12.0, "nutrition": { "energy_kcal": 340, "protein_g": 4, "fat_g": 16, "carb_g": 43, "sodium_mg": 250, "calcium_mg": 20 } },
+    { "code": "S002", "name": "小薯条", "category": "side", "price": 10.0, "nutrition": { "energy_kcal": 230, "protein_g": 3, "fat_g": 11, "carb_g": 29, "sodium_mg": 170, "calcium_mg": 14 } },
+    { "code": "S003", "name": "玉米杯", "category": "side", "price": 9.5, "nutrition": { "energy_kcal": 90, "protein_g": 2, "fat_g": 1, "carb_g": 19, "sodium_mg": 0, "calcium_mg": 4 } },
+    { "code": "S004", "name": "苹果片", "category": "side", "price": 8.0, "nutrition": { "energy_kcal": 35, "protein_g": 0, "fat_g": 0, "carb_g": 9, "sodium_mg": 0, "calcium_mg": 4 } },
+    { "code": "S005", "name": "麦乐鸡（4块）", "category": "side", "price": 12.5, "nutrition": { "energy_kcal": 190, "protein_g": 11, "fat_g": 11, "carb_g": 11, "sodium_mg": 400, "calcium_mg": 20 } },
+    { "code": "D001", "name": "中杯可口可乐", "category": "drink", "price": 9.0, "nutrition": { "energy_kcal": 210, "protein_g": 0, "fat_g": 0, "carb_g": 53, "sodium_mg": 15, "calcium_mg": 4 } },
+    { "code": "D002", "name": "中杯无糖可乐", "category": "drink", "price": 9.0, "nutrition": { "energy_kcal": 0, "protein_g": 0, "fat_g": 0, "carb_g": 0, "sodium_mg": 15, "calcium_mg": 4 } },
+    { "code": "D003", "name": "橙汁", "category": "drink", "price": 11.0, "nutrition": { "energy_kcal": 150, "protein_g": 2, "fat_g": 0, "carb_g": 34, "sodium_mg": 5, "calcium_mg": 8 } },
+    { "code": "D004", "name": "纯牛奶", "category": "drink", "price": 10.0, "nutrition": { "energy_kcal": 130, "protein_g": 7, "fat_g": 7, "carb_g": 10, "sodium_mg": 100, "calcium_mg": 240 } },
+    { "code": "D005", "name": "美式咖啡（中）", "category": "drink", "price": 12.0, "nutrition": { "energy_kcal": 5, "protein_g": 0, "fat_g": 0, "carb_g": 0, "sodium_mg": 5, "calcium_mg": 4 } },
+    { "code": "D006", "name": "矿泉水", "category": "drink", "price": 6.0, "nutrition": { "energy_kcal": 0, "protein_g": 0, "fat_g": 0, "carb_g": 0, "sodium_mg": 0, "calcium_mg": 0 } }
+  ]
+}

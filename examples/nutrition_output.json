@@ -1,0 +1,216 @@
+{
+  "plans": [
+    {
+      "items": [
+        {
+          "code": "M002",
+          "name": "板烧鸡腿堡",
+          "category": "main",
+          "price": 23.5,
+          "nutrition": {
+            "energy_kcal": 440.0,
+            "protein_g": 25.0,
+            "fat_g": 17.0,
+            "carb_g": 44.0,
+            "sodium_mg": 900.0,
+            "calcium_mg": 90.0
+          },
+          "tags": []
+        },
+        {
+          "code": "S003",
+          "name": "玉米杯",
+          "category": "side",
+          "price": 9.5,
+          "nutrition": {
+            "energy_kcal": 90.0,
+            "protein_g": 2.0,
+            "fat_g": 1.0,
+            "carb_g": 19.0,
+            "sodium_mg": 0.0,
+            "calcium_mg": 4.0
+          },
+          "tags": []
+        },
+        {
+          "code": "D005",
+          "name": "美式咖啡（中）",
+          "category": "drink",
+          "price": 12.0,
+          "nutrition": {
+            "energy_kcal": 5.0,
+            "protein_g": 0.0,
+            "fat_g": 0.0,
+            "carb_g": 0.0,
+            "sodium_mg": 5.0,
+            "calcium_mg": 4.0
+          },
+          "tags": []
+        }
+      ],
+      "total_price": 45.0,
+      "total_nutrition": {
+        "energy_kcal": 535.0,
+        "protein_g": 27.0,
+        "fat_g": 18.0,
+        "carb_g": 63.0,
+        "sodium_mg": 905.0,
+        "calcium_mg": 98.0
+      },
+      "deviation_pct": {
+        "energy_kcal": -0.9,
+        "protein_g": -3.6,
+        "fat_g": 0.0,
+        "carb_g": 0.0,
+        "sodium_mg": 0.6
+      },
+      "score": 0.0014,
+      "hard_constraints_ok": true
+    },
+    {
+      "items": [
+        {
+          "code": "M002",
+          "name": "板烧鸡腿堡",
+          "category": "main",
+          "price": 23.5,
+          "nutrition": {
+            "energy_kcal": 440.0,
+            "protein_g": 25.0,
+            "fat_g": 17.0,
+            "carb_g": 44.0,
+            "sodium_mg": 900.0,
+            "calcium_mg": 90.0
+          },
+          "tags": []
+        },
+        {
+          "code": "S003",
+          "name": "玉米杯",
+          "category": "side",
+          "price": 9.5,
+          "nutrition": {
+            "energy_kcal": 90.0,
+            "protein_g": 2.0,
+            "fat_g": 1.0,
+            "carb_g": 19.0,
+            "sodium_mg": 0.0,
+            "calcium_mg": 4.0
+          },
+          "tags": []
+        },
+        {
+          "code": "D006",
+          "name": "矿泉水",
+          "category": "drink",
+          "price": 6.0,
+          "nutrition": {
+            "energy_kcal": 0.0,
+            "protein_g": 0.0,
+            "fat_g": 0.0,
+            "carb_g": 0.0,
+            "sodium_mg": 0.0,
+            "calcium_mg": 0.0
+          },
+          "tags": []
+        }
+      ],
+      "total_price": 39.0,
+      "total_nutrition": {
+        "energy_kcal": 530.0,
+        "protein_g": 27.0,
+        "fat_g": 18.0,
+        "carb_g": 63.0,
+        "sodium_mg": 900.0,
+        "calcium_mg": 94.0
+      },
+      "deviation_pct": {
+        "energy_kcal": -1.9,
+        "protein_g": -3.6,
+        "fat_g": 0.0,
+        "carb_g": 0.0,
+        "sodium_mg": 0.0
+      },
+      "score": 0.0017,
+      "hard_constraints_ok": true
+    },
+    {
+      "items": [
+        {
+          "code": "M002",
+          "name": "板烧鸡腿堡",
+          "category": "main",
+          "price": 23.5,
+          "nutrition": {
+            "energy_kcal": 440.0,
+            "protein_g": 25.0,
+            "fat_g": 17.0,
+            "carb_g": 44.0,
+            "sodium_mg": 900.0,
+            "calcium_mg": 90.0
+          },
+          "tags": []
+        },
+        {
+          "code": "S003",
+          "name": "玉米杯",
+          "category": "side",
+          "price": 9.5,
+          "nutrition": {
+            "energy_kcal": 90.0,
+            "protein_g": 2.0,
+            "fat_g": 1.0,
+            "carb_g": 19.0,
+            "sodium_mg": 0.0,
+            "calcium_mg": 4.0
+          },
+          "tags": []
+        },
+        {
+          "code": "D002",
+          "name": "中杯无糖可乐",
+          "category": "drink",
+          "price": 9.0,
+          "nutrition": {
+            "energy_kcal": 0.0,
+            "protein_g": 0.0,
+            "fat_g": 0.0,
+            "carb_g": 0.0,
+            "sodium_mg": 15.0,
+            "calcium_mg": 4.0
+          },
+          "tags": []
+        }
+      ],
+      "total_price": 42.0,
+      "total_nutrition": {
+        "energy_kcal": 530.0,
+        "protein_g": 27.0,
+        "fat_g": 18.0,
+        "carb_g": 63.0,
+        "sodium_mg": 915.0,
+        "calcium_mg": 98.0
+      },
+      "deviation_pct": {
+        "energy_kcal": -1.9,
+        "protein_g": -3.6,
+        "fat_g": 0.0,
+        "carb_g": 0.0,
+        "sodium_mg": 1.7
+      },
+      "score": 0.0018,
+      "hard_constraints_ok": true
+    }
+  ],
+  "meta": {
+    "evaluated_combinations": 180,
+    "feasible_combinations": 73,
+    "structure": {
+      "main": 1,
+      "side": 1,
+      "drink": 1
+    },
+    "degraded": false,
+    "note": "已按硬约束过滤"
+  }
+}

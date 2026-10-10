@@ -1,0 +1,24 @@
+{
+  "_comment": "McWise 省钱参谋输入示例。券面信息为教学示例，正式使用请以 query-store-coupons / query-my-coupons 实时返回为准。",
+  "cart": [
+    { "code": "M002", "name": "板烧鸡腿堡", "price": 23.5, "qty": 1 },
+    { "code": "S005", "name": "麦乐鸡（4块）", "price": 12.5, "qty": 1 },
+    { "code": "S001", "name": "中薯条", "price": 12.0, "qty": 1 },
+    { "code": "D002", "name": "中杯无糖可乐", "price": 9.0, "qty": 1 }
+  ],
+  "delivery_fee": 9.0,
+  "max_coupons": 1,
+  "coupons": [
+    { "coupon_id": "C29", "name": "满29减5", "kind": "threshold", "threshold": 29, "discount": 5 },
+    { "coupon_id": "C39", "name": "满39减8", "kind": "threshold", "threshold": 39, "discount": 8 },
+    { "coupon_id": "C59", "name": "神券·满59减20", "kind": "threshold", "threshold": 59, "discount": 20 },
+    { "coupon_id": "C79", "name": "满79减30", "kind": "threshold", "threshold": 79, "discount": 30 }
+  ],
+  "cross_sell": [
+    { "code": "S004", "name": "苹果片", "price": 8.0, "qty": 1 },
+    { "code": "S003", "name": "玉米杯", "price": 9.5, "qty": 1 },
+    { "code": "T001", "name": "香芋派", "price": 9.0, "qty": 1 },
+    { "code": "S002", "name": "小薯条", "price": 10.0, "qty": 1 },
+    { "code": "D004", "name": "纯牛奶", "price": 10.0, "qty": 1 }
+  ]
+}

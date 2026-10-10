@@ -1,0 +1,13 @@
+{
+  "_comment": "McWise 活动雷达输入示例。活动信息为教学示例，正式使用请以 campaign-calendar 实时返回为准。",
+  "city": "上海",
+  "interests": ["早餐", "咖啡", "派对", "积分"],
+  "campaigns": [
+    { "name": "麦麦省无限领券", "status": "ongoing", "start": "2026-09-01", "end": "2026-10-31", "tags": ["优惠券", "省钱"], "description": "每天可领门店专属优惠券" },
+    { "name": "麦咖啡秋季新品季", "status": "ongoing", "start": "2026-09-20", "end": "2026-11-15", "tags": ["咖啡", "新品"], "description": "秋季限定咖啡新品上市" },
+    { "name": "早餐月卡超值购", "status": "ongoing", "start": "2026-09-01", "end": "2026-12-31", "tags": ["早餐", "月卡"], "description": "早餐月卡，天天享优惠" },
+    { "name": "积分抽奖嘉年华", "status": "ongoing", "start": "2026-10-01", "end": "2026-10-31", "tags": ["积分", "抽奖"], "description": "积分抽奖赢好礼" },
+    { "name": "麦当劳生日派对季", "status": "upcoming", "start": "2026-10-20", "end": "2026-12-31", "city": "上海", "tags": ["派对", "亲子"], "description": "门店生日派对预约，含助餐服务" },
+    { "name": "万圣节主题派对", "status": "upcoming", "start": "2026-10-25", "end": "2026-11-02", "city": "北京", "tags": ["派对", "万圣节"], "description": "限时主题派对场次" }
+  ]
+}

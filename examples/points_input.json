@@ -1,0 +1,14 @@
+{
+  "_comment": "McWise 积分管家输入示例。积分价与市场价值为教学示例，正式使用请以 mall-points-products / mall-product-detail 实时返回为准。",
+  "balance": { "available_points": 3200, "expiring_points": 500 },
+  "products": [
+    { "product_id": "P001", "name": "中杯可乐兑换券", "points_cost": 300, "market_value": 9.0 },
+    { "product_id": "P002", "name": "麦咖啡中杯兑换券", "points_cost": 500, "market_value": 15.0 },
+    { "product_id": "P003", "name": "香芋派兑换券", "points_cost": 400, "market_value": 9.0 },
+    { "product_id": "P004", "name": "麦乐鸡（4块）兑换券", "points_cost": 700, "market_value": 12.5 },
+    { "product_id": "P005", "name": "麦辣鸡腿堡兑换券", "points_cost": 900, "market_value": 21.5 },
+    { "product_id": "P006", "name": "巨无霸兑换券", "points_cost": 1200, "market_value": 25.5 },
+    { "product_id": "P007", "name": "麦麦定制马克杯", "points_cost": 3000, "market_value": 69.0 },
+    { "product_id": "P008", "name": "保温随行杯", "points_cost": 5000, "market_value": 99.0 }
+  ]
+}

@@ -1,0 +1,30 @@
+# 麦麦智囊 McWise — Secrets
+.env
+.env.*
+!.env.example
+mcp-config.json
+*.local.json
+token.txt
+secrets/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Scratch
+out_*.txt
+*.log

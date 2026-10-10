@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>麦麦智囊 McWise · 方案演示</title>
+<style>
+  :root{
+    --red:#DA291C; --yellow:#FFC72C; --ink:#1a1a1a; --muted:#6b6b6b;
+    --line:#e8e6e1; --bg:#faf9f7; --card:#ffffff;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:"PingFang SC","Microsoft YaHei",-apple-system,"Segoe UI",sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.6; padding:40px 20px;
+  }
+  .wrap{max-width:1080px;margin:0 auto}
+  header{display:flex;align-items:center;gap:16px;margin-bottom:8px}
+  .logo{
+    width:52px;height:52px;border-radius:14px;background:var(--red);
+    display:flex;align-items:center;justify-content:center;flex:none;
+    font-size:26px;font-weight:800;color:var(--yellow);
+  }
+  h1{font-size:26px;letter-spacing:-.4px}
+  h1 span{color:var(--red)}
+  .sub{color:var(--muted);font-size:14px;margin-top:2px}
+  .lede{
+    margin:24px 0 32px;padding:18px 22px;background:var(--card);
+    border:1px solid var(--line);border-left:4px solid var(--yellow);
+    border-radius:10px;font-size:15px;color:#3a3a3a;
+  }
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+  @media(max-width:820px){.grid{grid-template-columns:1fr}}
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:22px;display:flex;flex-direction:column;gap:14px;
+    box-shadow:0 1px 2px rgba(0,0,0,.03);
+  }
+  .card h2{font-size:16px;display:flex;align-items:center;gap:9px}
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--red);flex:none}
+  .tool{font-size:12px;color:var(--muted);font-family:ui-monospace,Menlo,Consolas,monospace;word-break:break-all}
+  .hero{font-size:30px;font-weight:800;letter-spacing:-.5px}
+  .hero small{font-size:13px;font-weight:500;color:var(--muted);margin-left:6px}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{text-align:left;padding:7px 0;border-bottom:1px solid var(--line)}
+  th{color:var(--muted);font-weight:500;font-size:12px}
+  td.num{text-align:right;font-variant-numeric:tabular-nums}
+  .good{color:var(--red);font-weight:700}
+  .ok{color:#1a7f37;font-weight:700}
+  .bar{height:6px;border-radius:3px;background:var(--line);overflow:hidden;margin-top:4px}
+  .bar i{display:block;height:100%;background:var(--yellow)}
+  .tag{
+    display:inline-block;font-size:11px;padding:2px 8px;border-radius:999px;
+    background:#fff4d6;color:#8a6100;font-weight:600;
+  }
+  .note{font-size:12px;color:var(--muted)}
+  footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--line);
+    font-size:12px;color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">M</div>
+    <div>
+      <h1>麦麦智囊 <span>McWise</span></h1>
+      <div class="sub">基于麦当劳中国 MCP 的智能决策求解层 · 方案演示</div>
+    </div>
+  </header>
+
+  <div class="lede">
+    <strong>不是检索，是求解。</strong>MCP 负责提供实时事实（菜单、营养、券、积分、活动），
+    McWise 的本地求解器负责在约束下搜索最优解，并把每一步推导摊开给你看。
+    以下为 <code>examples/</code> 中真实运行结果。
+  </div>
+
+  <div class="grid">
+
+    <!-- 营养配餐 -->
+    <div class="card">
+      <h2><span class="dot"></span>营养配餐官</h2>
+      <div class="tool">now-time-info · query-meals · list-nutrition-foods</div>
+      <div class="hero">¥45.00 <small>板烧鸡腿堡 + 玉米杯 + 美式咖啡</small></div>
+      <table>
+        <tr><th>指标</th><th class="num">实际</th><th class="num">目标</th><th class="num">偏差</th></tr>
+        <tr><td>热量</td><td class="num">535 kcal</td><td class="num">540</td><td class="num ok">−0.9%</td></tr>
+        <tr><td>蛋白质</td><td class="num">27 g</td><td class="num">28</td><td class="num ok">−3.6%</td></tr>
+        <tr><td>脂肪</td><td class="num">18 g</td><td class="num">18</td><td class="num ok">+0.0%</td></tr>
+        <tr><td>碳水</td><td class="num">63 g</td><td class="num">63</td><td class="num ok">+0.0%</td></tr>
+        <tr><td>钠</td><td class="num">905 mg</td><td class="num">900</td><td class="num ok">+0.6%</td></tr>
+      </table>
+      <div class="note">全部指标偏差 &lt; 4%，无硬约束违反。</div>
+    </div>
+
+    <!-- 省钱参谋 -->
+    <div class="card">
+      <h2><span class="dot"></span>省钱参谋</h2>
+      <div class="tool">available-coupons · auto-bind-coupons · calculate-price</div>
+      <div class="hero">省 ¥8.00 <small>小计 ¥57.00 → 实付 ¥58.00（含配送费 ¥9.00）</small></div>
+      <table>
+        <tr><th>券</th><th class="num">门槛</th><th class="num">可省</th><th class="num">是否最优</th></tr>
+        <tr><td>满39减8</td><td class="num">¥39</td><td class="num">¥8.00</td><td class="num good">✓ 采用</td></tr>
+        <tr><td>满29减5</td><td class="num">¥29</td><td class="num">¥5.00</td><td class="num">—</td></tr>
+        <tr><td>神券·满59减20</td><td class="num">¥59</td><td class="num">¥0.00</td><td class="num">差 ¥2</td></tr>
+        <tr><td>满79减30</td><td class="num">¥79</td><td class="num">¥0.00</td><td class="num">差 ¥22</td></tr>
+      </table>
+      <div><span class="tag">凑单建议</span>
+        <span class="note" style="margin-left:6px">加「苹果片」¥8.00 → 触发满59减20，<strong class="good">净省 ¥4.00</strong></span>
+      </div>
+      <div class="note">仅在「优惠增量 − 凑单成本 &gt; 0」时才建议凑单。</div>
+    </div>
+
+    <!-- 积分管家 -->
+    <div class="card">
+      <h2><span class="dot"></span>积分管家</h2>
+      <div class="tool">query-my-account · mall-points-products · mall-product-detail</div>
+      <div class="hero">3200 <small>积分 → 建议消耗 3100，兑换价值 ¥71.00</small></div>
+      <table>
+        <tr><th>商品</th><th class="num">积分</th><th class="num">价值</th><th class="num">每千分价值</th></tr>
+        <tr><td>中杯可乐兑换券</td><td class="num">300</td><td class="num">¥9.00</td><td class="num good">¥30.00</td></tr>
+        <tr><td>麦咖啡中杯兑换券</td><td class="num">500</td><td class="num">¥15.00</td><td class="num good">¥30.00</td></tr>
+        <tr><td>香芋派兑换券</td><td class="num">400</td><td class="num">¥9.00</td><td class="num">¥22.50</td></tr>
+        <tr><td>麦乐鸡（4块）兑换券</td><td class="num">700</td><td class="num">¥12.50</td><td class="num">¥17.86</td></tr>
+        <tr><td>巨无霸兑换券</td><td class="num">1200</td><td class="num">¥25.50</td><td class="num">¥21.25</td></tr>
+      </table>
+      <div class="bar"><i style="width:76%"></i></div>
+      <div class="note">0/1 背包求解，组合效率 <strong>¥22.90 / 1000 积分</strong>；
+        另提示 <strong>500 积分即将过期</strong>，建议优先消耗。</div>
+    </div>
+
+    <!-- 活动雷达 -->
+    <div class="card">
+      <h2><span class="dot"></span>活动雷达</h2>
+      <div class="tool">campaign-calendar · query-party-city · query-party-store</div>
+      <div class="hero">4.6 <small>最高匹配度 · 麦当劳生日派对季</small></div>
+      <table>
+        <tr><th>活动</th><th class="num">状态</th><th class="num">匹配度</th></tr>
+        <tr><td>麦当劳生日派对季</td><td class="num"><span class="tag">即将开始</span></td><td class="num good">4.6</td></tr>
+        <tr><td>早餐月卡超值购</td><td class="num">进行中</td><td class="num">3.5</td></tr>
+        <tr><td>麦咖啡秋季新品季</td><td class="num">进行中</td><td class="num">3.5</td></tr>
+        <tr><td>积分抽奖嘉年华</td><td class="num">进行中</td><td class="num">3.5</td></tr>
+        <tr><td>万圣节主题派对</td><td class="num">即将开始</td><td class="num">2.3</td></tr>
+      </table>
+      <div class="note">城市「上海」命中 +1.5，兴趣「派对」命中 +1.5；
+        北京场次因城市不匹配 −0.8。</div>
+    </div>
+
+  </div>
+
+  <footer>
+    <span>McWise v1.0.0 · 麦当劳程序员节创意开发大赛参赛作品 · 非麦当劳官方产品</span>
+    <span>数据以麦当劳官方渠道实时结果为准</span>
+  </footer>
+</div>
+</body>
+</html>

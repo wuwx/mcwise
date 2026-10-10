@@ -1,0 +1,25 @@
+# 统一换行符策略：仓库内一律使用 LF，避免 Windows/macOS/Linux 检出不一致
+* text=auto eol=lf
+
+# 参赛声明文件必须与官方原文逐字节一致，锁定换行符不做任何转换
+CONTEST_DECLARATION.md text eol=lf
+
+# 明确二进制文件，禁止换行符转换
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.webp binary
+*.pdf  binary
+*.zip  binary
+*.woff binary
+*.woff2 binary
+
+# 语言标注（影响 GitHub 语言统计与语法高亮）
+*.py     text diff=python
+*.md     text diff=markdown
+*.json   text diff=json
+*.html   text diff=html
+*.yml    text
+*.yaml   text
