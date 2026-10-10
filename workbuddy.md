@@ -111,7 +111,7 @@ $ python scripts/cli.py points --input examples/points_input.json
 | 调研 | 抓取并结构化两个官方仓库的全部规则与 Tool 清单 |
 | 合规 | 直接下载官方 `CONTEST_DECLARATION.md`，确保内容零改动 |
 | 设计 | 提出「求解层」差异化定位与四模块拆分 |
-| 编码 | 产出 7 个 Python 模块 + 22 个测试 + 6 份文档 |
+| 编码 | 产出 9 个 Python 模块 + 46 个测试 + 6 份文档 |
 | 调试 | 定位并修复 2 个真实缺陷，测试全绿 |
 | 验证 | 端到端运行 CLI，生成示例输出快照 |
 | 文档 | 编写 README / MCP_INTEGRATION / SKILL 三份核心文档 |
@@ -144,16 +144,58 @@ $ python scripts/cli.py points --input examples/points_input.json
 
 ---
 
+## 3.2 编码兼容性修复（第三轮迭代）
+
+**现象**：CI 在 `windows-latest` + Python 3.9 上失败，`ubuntu` / `macos` 全部正常：
+
+```
+File "D:\a\mcwise\mcwise\scripts\cli.py", line 44, in _emit
+    print(rendered)
+File "C:\hostedtoolcache\windows\Python\3.9.13\x64\lib\encodings\cp1252.py", line 19, in encode
+UnicodeEncodeError: 'charmap' codec can't encode characters in position 11-15
+```
+
+**根因**：Windows 上 Python 把标准输出绑定到系统 ANSI 代码页（英文系统 `cp1252`、
+中文系统 `cp936`）而非 UTF-8；本项目所有输出都是中文，于是在写入流的那一刻崩溃。
+**重定向到文件或 `/dev/null` 并不能规避**——编码发生在写入时，与终端无关。
+
+**修复**：新增 `scripts/stdio_utf8.py`，在进程入口把 `stdin` / `stdout` / `stderr`
+显式 `reconfigure(encoding="utf-8")`，不依赖宿主 locale，也不依赖用户是否设置了
+`PYTHONUTF8`：
+
+- 关键发现：`PYTHONIOENCODING` 的优先级**高于** `PYTHONUTF8`，所以只加环境变量并不可靠，
+  运行时重设才是可靠手段（本机实测验证了这一点）；
+- `stdin` 同样需要加固，否则 `--stdin` 读中文 JSON 会在**解析报文**阶段失败；
+- 对 `StringIO`（无 `reconfigure`）、`None` 流、已关闭的流全部静默跳过，
+  加固本身绝不能让程序启动失败。
+
+**回归防护**：新增 `tests/test_stdio_utf8.py`（13 个测试），用 `PYTHONIOENCODING=cp1252`
+在 **Linux / macOS 上也能复现**同一故障条件，因此不必依赖 Windows runner 才能拦住回归。
+其中一条是**反证测试**：同一环境下运行未加固的脚本必须抛 `UnicodeEncodeError`
+——确保其余测试不是因为"环境恰好是 UTF-8"而侥幸通过。
+
+WorkBuddy 还做了**反向验证**：保持 `cli.py` 完全不变、仅把加固函数替换为空操作，
+复现出与 CI 逐字一致的 `position 11-15` 报错；换回真实实现即通过。
+这证明该修复正是问题的解，而不是旁路掩盖。
+
+CI 侧同步调整：作业级设 `PYTHONUTF8=1` 保证测试输出稳定；「CLI 端到端冒烟」步骤则
+**故意**把标准流压回 `cp1252`，使每次 CI 都在最恶劣条件下复核这一修复。
+
+---
+
 ## 4. 可复现性说明
 
 本项目的全部产物（代码、测试、文档、示例）均可通过仓库内容独立复现，
 不依赖任何会话内的临时状态。验证方式：
 
 ```bash
-python scripts/check_compliance.py        # 参赛合规自检 → 全部通过（共 19 项检查）
-python -m unittest discover -s tests -v   # Ran 33 tests ... OK
+python scripts/check_compliance.py        # 参赛合规自检 → 结果：✓ 全部通过
+python -m unittest discover -s tests -v   # Ran 46 tests ... OK
 ruff check scripts tests                  # All checks passed!
 ruff format --check scripts tests         # 已格式化
+
+# 复现 Windows 代码页条件（跨平台可跑，用于验证编码加固）
+PYTHONIOENCODING=cp1252 PYTHONUTF8=0 python scripts/cli.py points --input examples/points_input.json
 ```
 
 ---

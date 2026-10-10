@@ -19,6 +19,12 @@ jobs:
   test:
     name: 单元测试 · ${{ matrix.os }} · Py${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
+    env:
+      # 统一按 UTF-8 运行，避免 unittest 的断言差异（含中文）在 Windows runner 上
+      # 因 ANSI 代码页二次崩溃、掩盖真实失败原因。
+      # 注意：PYTHONIOENCODING 的优先级高于 PYTHONUTF8，因此下面「CLI 冒烟测试」
+      # 步骤会显式把标准流压回 cp1252，用来验证 CLI 自身的编码加固确实生效。
+      PYTHONUTF8: "1"
     strategy:
       fail-fast: false
       matrix:
@@ -48,21 +54,33 @@ jobs:
 
       - name: CLI 端到端冒烟测试
         shell: bash
+        # 故意把标准流压到 Windows 遗留代码页（cp1252）。windows-latest runner 的
+        # 真实代码页正是 1252，之前就因此失败：cli.py 输出中文时抛
+        # UnicodeEncodeError: 'charmap' codec can't encode characters。
+        # CLI 现在会在启动时自行切换到 UTF-8（scripts/stdio_utf8.py），
+        # 保留这两个变量使得每次 CI 都在最恶劣条件下复核这一点。
+        env:
+          PYTHONIOENCODING: cp1252
+          PYTHONUTF8: "0"
         run: |
           set -euo pipefail
           echo "— 四个求解器 —"
           for cmd in nutrition deals points campaigns; do
-            python scripts/cli.py "$cmd" --input "examples/${cmd}_input.json" > /dev/null
+            python scripts/cli.py "$cmd" --input "examples/${cmd}_input.json" > "out_${cmd}.txt"
+            test -s "out_${cmd}.txt"   # 非空，确认中文确实写出了流
             echo "  ✓ $cmd"
           done
           echo "— 意图与调用链 —"
-          python scripts/cli.py intents > /dev/null && echo "  ✓ intents"
-          python scripts/cli.py chain nutrition_plan > /dev/null && echo "  ✓ chain"
-          python scripts/cli.py chain one_tap_order > /dev/null && echo "  ✓ chain one_tap_order"
+          python scripts/cli.py intents > out_intents.json && echo "  ✓ intents"
+          python scripts/cli.py chain nutrition_plan > out_chain_nutrition_plan.json && echo "  ✓ chain"
+          python scripts/cli.py chain one_tap_order > out_chain_one_tap_order.json && echo "  ✓ chain one_tap_order"
 
       - name: 验证 JSON 输出可被机器消费
         shell: bash
         run: |
           set -euo pipefail
+          # 以字节流读取并显式按 UTF-8 解码：验证管道上流转的确实是 UTF-8，
+          # 不依赖父子进程的默认编码恰好一致（否则中文会静默变成乱码）。
+          # 消费端刻意只输出 ASCII —— 它自身不该再受任何代码页影响。
           python scripts/cli.py points --input examples/points_input.json --json \
-            | python -c "import json,sys; d=json.load(sys.stdin); assert d['plan']['used_points'] > 0; print('  ✓ JSON 输出结构正确')"
+            | python -c 'import json,sys; d=json.loads(sys.stdin.buffer.read().decode("utf-8")); assert d["plan"]["used_points"] > 0; print("  [OK] JSON output is valid UTF-8 and machine-consumable")'

@@ -27,4 +27,5 @@ desktop.ini
 
 # Scratch
 out_*.txt
+out_*.json
 *.log

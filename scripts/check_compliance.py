@@ -24,6 +24,8 @@ import json
 import re
 from pathlib import Path
 
+from stdio_utf8 import force_utf8_stdio
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
 # --------------------------------------------------------------------------- #
@@ -255,6 +257,9 @@ def run(root: Path, expected_sha: str) -> int:
 
 
 def main(argv: list[str] | None = None) -> int:
+    # 自检结果含中文，Windows 默认代码页会直接抛 UnicodeEncodeError。
+    force_utf8_stdio()
+
     parser = argparse.ArgumentParser(description="参赛仓库合规自检")
     parser.add_argument("--root", type=Path, default=REPO_ROOT, help="仓库根目录（默认自动推断）")
     parser.add_argument(

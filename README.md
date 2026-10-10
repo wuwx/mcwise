@@ -8,7 +8,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.9%2B-blue.svg)](https://www.python.org/)
 [![MCP](https://img.shields.io/badge/MCP-Streamable%20HTTP-orange.svg)](https://open.mcd.cn/mcp)
-[![Tests](https://img.shields.io/badge/tests-33%20passed-brightgreen.svg)](./tests)
+[![Tests](https://img.shields.io/badge/tests-46%20passed-brightgreen.svg)](./tests)
 
 **麦麦智囊（McWise）** 是一个基于**麦当劳中国 MCP Server** 构建的智能决策 Skill。
 它不做「再包一层聊天框」这种事，而是把麦当劳点餐场景中真正需要算的部分——
@@ -139,8 +139,8 @@ cd mcwise
 ### 4.3 验证安装
 
 ```bash
-python -m unittest discover -s tests -v     # 单元测试，预期 Ran 33 tests ... OK
-python scripts/check_compliance.py          # 参赛合规自检，预期 全部通过（共 19 项检查）
+python -m unittest discover -s tests -v     # 全部 46 个测试，预期 Ran 46 tests ... OK
+python scripts/check_compliance.py          # 参赛合规自检，预期 结果：✓ 全部通过
 ```
 
 ---
@@ -253,11 +253,13 @@ mcwise/
 │   ├── points_concierge.py       # 积分价值 + 0/1 背包
 │   ├── campaign_radar.py         # 活动匹配排序
 │   ├── workflow.py               # 意图 → MCP Tool 调用链
+│   ├── stdio_utf8.py             # 标准流编码加固（Windows 代码页兼容）
 │   ├── check_compliance.py       # 参赛合规自检脚本
 │   └── cli.py                    # 命令行入口
 ├── tests/
 │   ├── test_mcwise.py            # 四大求解器的 22 个单元测试
-│   └── test_compliance.py        # 合规自检的 11 个单元测试（含反向用例）
+│   ├── test_compliance.py        # 合规自检的 11 个单元测试（含反向用例）
+│   └── test_stdio_utf8.py        # 编码加固的 13 个回归测试（跨平台复现 Windows 故障）
 ├── examples/                     # 输入样例与真实输出快照
 ├── assets/
 │   └── demo.html                 # 单文件方案演示页（浏览器直接打开）
@@ -276,12 +278,20 @@ mcwise/
 | **Lint** | push / PR | `ruff check`（E/W/F/I/B/UP/RUF 规则集）+ `ruff format --check` |
 | **参赛合规检查** | push / PR / 每日定时 | 校验必需文件齐全、`CONTEST_DECLARATION.md` 与官方原文逐字节一致、JSON 合法、配置已脱敏、无硬编码凭据 |
 
+CI 中的「CLI 端到端冒烟」步骤会**故意**把标准流压回 Windows 遗留代码页（`PYTHONIOENCODING=cp1252`）：
+Windows 上 Python 默认按系统 ANSI 代码页（英文 `cp1252`、中文 `cp936`）写标准输出，输出中文会抛
+`UnicodeEncodeError`。CLI 在启动时自行切换到 UTF-8（`scripts/stdio_utf8.py`）后不再受宿主 locale 影响，
+该步骤确保这一点被持续复核，而不是修一次就悄悄退化。
+
 本地可随时复现同样的结论：
 
 ```bash
 python scripts/check_compliance.py        # 参赛合规自检
-python -m unittest discover -s tests -v   # 全部 33 个测试
+python -m unittest discover -s tests -v   # 全部 46 个测试
 ruff check scripts tests && ruff format --check scripts tests
+
+# 复现 Windows 代码页条件（Linux / macOS 上同样可跑）
+PYTHONIOENCODING=cp1252 PYTHONUTF8=0 python scripts/cli.py points --input examples/points_input.json
 ```
 
 > 「参赛合规检查」还包含一个 `declaration-upstream` 作业：每次运行都会**实时拉取官方仓库的原文**

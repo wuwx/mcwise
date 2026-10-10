@@ -25,6 +25,7 @@ from campaign_radar import rank_campaigns, render_campaigns
 from deal_strategist import optimize_deals, render_deal
 from nutrition_planner import plan_meals, render_plan
 from points_concierge import optimize_points, render_points
+from stdio_utf8 import force_utf8_stdio
 from workflow import list_intents, tool_chain
 
 
@@ -71,6 +72,10 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: list[str] | None = None) -> int:
+    # 先加固标准流编码，再解析参数：argparse 的报错信息本身也是中文。
+    # 不这样做的话，Windows 上输出中文会抛 UnicodeEncodeError（见 stdio_utf8 模块说明）。
+    force_utf8_stdio()
+
     args = build_parser().parse_args(argv)
 
     if args.command == "intents":
